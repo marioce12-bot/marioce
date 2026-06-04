@@ -372,10 +372,10 @@ img {
 
 .animations-ready .reveal-on-scroll {
   opacity: 0;
-  transform: translateY(34px) scale(0.98);
+  transform: translateY(22px) scale(0.99);
   transition:
-    opacity 0.78s ease var(--reveal-delay, 0ms),
-    transform 0.78s cubic-bezier(0.2, 0.82, 0.2, 1) var(--reveal-delay, 0ms),
+    opacity 0.42s ease var(--reveal-delay, 0ms),
+    transform 0.42s cubic-bezier(0.2, 0.82, 0.2, 1) var(--reveal-delay, 0ms),
     border-color 0.3s ease,
     box-shadow 0.3s ease;
 }

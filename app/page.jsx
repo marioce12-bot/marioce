@@ -196,7 +196,7 @@ export default function HomePage() {
 
     elements.forEach((element, index) => {
       element.classList.remove("is-visible");
-      element.style.setProperty("--reveal-delay", `${Math.min(index * 45, 360)}ms`);
+      element.style.setProperty("--reveal-delay", `${Math.min(index * 18, 140)}ms`);
       observer.observe(element);
     });
 
