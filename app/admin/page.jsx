@@ -19,7 +19,8 @@ const emptyProject = {
   status: "Termine",
   tech: "",
   url: "",
-  image: ""
+  image: "",
+  pinned: false
 };
 
 function csvToArray(value) {
@@ -193,10 +194,11 @@ export default function AdminPage() {
       title: project.title,
       description: project.description,
       status: project.status,
-      tech: csvToArray(project.tech),
-      url: project.url,
-      image: project.image
-    };
+    tech: csvToArray(project.tech),
+    url: project.url,
+    image: project.image,
+    pinned: project.pinned
+  };
     const exists = content.projects.some((item) => item.id === id);
     const projects = exists
       ? content.projects.map((item) => (item.id === id ? nextProject : item))
@@ -214,7 +216,8 @@ export default function AdminPage() {
       status: projectToEdit.status || "Termine",
       tech: arrayToCsv(projectToEdit.tech),
       url: projectToEdit.url || "",
-      image: projectToEdit.image || ""
+      image: projectToEdit.image || "",
+      pinned: Boolean(projectToEdit.pinned)
     });
     setProjectUploadStatus("");
     openAdminSection("project");
@@ -579,6 +582,10 @@ export default function AdminPage() {
               Image du projet (URL)
               <input value={project.image} placeholder="https://..." onChange={(event) => setProject({ ...project, image: event.target.value })} />
             </label>
+            <label className="checkbox-row">
+              <input type="checkbox" checked={project.pinned} onChange={(event) => setProject({ ...project, pinned: event.target.checked })} />
+              Epingler ce projet en tete
+            </label>
             <label>
               Envoyer une image du projet sur ImgBB
               <input type="file" accept="image/*" onChange={(event) => event.target.files[0] && uploadIntoField(event.target.files[0], "project")} />
@@ -606,7 +613,7 @@ export default function AdminPage() {
               {!content.projects.length && <p className="muted">Aucun projet pour le moment.</p>}
               {content.projects.map((item) => (
                 <article className="admin-project" key={item.id}>
-                  <h3>{item.title}</h3>
+                  <h3>{item.title} {item.pinned && <span className="pin-badge">Epingle</span>}</h3>
                   <p className="muted">{item.status} - {arrayToCsv(item.tech)}</p>
                   <div className="form-actions">
                     <button className="button secondary" type="button" onClick={() => editProject(item)} disabled={busy}>

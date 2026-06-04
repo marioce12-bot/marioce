@@ -227,6 +227,7 @@ export default function HomePage() {
   const hasAbout = Boolean(content.bio || content.skills.length > 0);
   const hasProjects = content.projects.length > 0;
   const hasContact = Boolean(content.contactText || contactLinksCount > 0);
+  const sortedProjects = [...content.projects].sort((first, second) => Number(Boolean(second.pinned)) - Number(Boolean(first.pinned)));
 
   return (
     <div className={`public-body ${loading ? "is-loading" : ""} ${animationsReady ? "animations-ready" : ""}`}>
@@ -358,7 +359,7 @@ export default function HomePage() {
               <h2>Sites et projets</h2>
             </div>
             <div className="projects-grid">
-              {content.projects.map((project) => {
+              {sortedProjects.map((project) => {
                 const tech = Array.isArray(project.tech) ? project.tech.join(" / ") : project.tech || "";
                 const projectUrl = normalizeUrl(project.url);
                 return (
@@ -372,6 +373,7 @@ export default function HomePage() {
                     <div className="project-content">
                       <div className="project-meta">
                         <span className={`status-badge ${statusClass(project.status)}`}>{project.status || "Projet"}</span>
+                        {project.pinned && <span className="pin-badge">Epingle</span>}
                         {tech && <span className="project-tech">{tech}</span>}
                       </div>
                       <h3>{project.title}</h3>

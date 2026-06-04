@@ -778,6 +778,19 @@ select:focus-visible {
   color: #93c5fd;
 }
 
+.pin-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 0.24rem 0.52rem;
+  border: 1px solid rgba(250, 204, 21, 0.32);
+  border-radius: 999px;
+  background: rgba(250, 204, 21, 0.12);
+  color: #fde68a;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
 .project-tech {
   color: var(--brand);
 }
@@ -1141,6 +1154,25 @@ select option {
 
 .form-row > label {
   flex: 1 1 220px;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: fit-content;
+  padding: 0.72rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  background: var(--surface-soft);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.checkbox-row input {
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: var(--brand);
 }
 
 .admin-projects {
