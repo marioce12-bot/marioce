@@ -237,8 +237,19 @@ document.getElementById("resetBtn").addEventListener("click", async () => {
 });
 
 document.getElementById("exportBtn").addEventListener("click", () => {
-  jsonOutput.value = JSON.stringify(content, null, 2);
-  jsonOutput.select();
+  const json = JSON.stringify(content, null, 2);
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  const date = new Date().toISOString().slice(0, 10);
+
+  jsonOutput.value = json;
+  link.href = url;
+  link.download = `portfolio-${date}.json`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
 });
 
 document.getElementById("importInput").addEventListener("change", async (event) => {

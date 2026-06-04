@@ -1,6 +1,6 @@
-import { loadPortfolio } from "./storage.js";
+import { defaults, loadPortfolio } from "./storage.js";
 
-let content = await loadPortfolio();
+let content = defaults;
 
 function setText(id, value) {
   const element = document.getElementById(id);
@@ -75,8 +75,8 @@ function renderProjects() {
           )}</div>
           <div class="project-content">
             <div class="project-meta">
-              <span>${escapeHtml(project.status || "Projet")}</span>
-              <span>${escapeHtml(tech)}</span>
+              <span class="status-badge ${statusClass(project.status)}">${escapeHtml(project.status || "Projet")}</span>
+              <span class="project-tech">${escapeHtml(tech)}</span>
             </div>
             <h3>${escapeHtml(project.title)}</h3>
             <p>${escapeHtml(project.description)}</p>
@@ -100,6 +100,14 @@ function escapeAttr(value) {
   return escapeHtml(value).replace(/`/g, "&#096;");
 }
 
+function statusClass(status) {
+  const normalized = String(status || "").toLowerCase();
+  if (normalized.includes("termine")) return "done";
+  if (normalized.includes("cours")) return "progress";
+  if (normalized.includes("prototype")) return "prototype";
+  return "prototype";
+}
+
 function renderWhatsappFloat() {
   const link = document.getElementById("whatsappFloat");
   if (!link) return;
@@ -118,7 +126,19 @@ function renderWhatsappFloat() {
 renderProfile();
 renderProjects();
 initWorldIntro();
-initScrollReveal();
+
+loadPortfolio()
+  .then((loadedContent) => {
+    content = loadedContent;
+    renderProfile();
+    renderProjects();
+  })
+  .catch((error) => {
+    console.warn("Impossible de charger le contenu Firebase", error);
+  })
+  .finally(() => {
+    initScrollReveal();
+  });
 
 function initWorldIntro() {
   const intro = document.getElementById("worldIntro");
@@ -137,6 +157,8 @@ function initWorldIntro() {
 function initScrollReveal() {
   const elements = document.querySelectorAll(".reveal-on-scroll");
   if (!elements.length) return;
+
+  document.body.classList.add("animations-ready");
 
   const observer = new IntersectionObserver(
     (entries) => {

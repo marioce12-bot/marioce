@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Syne:wght@700;800&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
@@ -54,69 +54,89 @@
 
         <form id="profileForm" class="form-card">
           <h2>Presentation</h2>
-          <label>
-            Nom complet
-            <input name="fullName" required />
-          </label>
-          <label>
-            Role / titre
-            <input name="role" required />
-          </label>
-          <label>
-            Phrase d'accroche
-            <textarea name="tagline" rows="3" required></textarea>
-          </label>
-          <label>
-            Bio
-            <textarea name="bio" rows="6" required></textarea>
-          </label>
-          <div class="form-row">
+          <div class="form-section">
+            <div class="form-section-heading">
+              <h3>Identite</h3>
+              <p>Informations principales affichees dans le hero et la presentation.</p>
+            </div>
             <label>
-              Ville / pays
-              <input name="location" />
+              Nom complet
+              <input name="fullName" required />
             </label>
             <label>
-              Email
-              <input name="email" type="email" />
-            </label>
-          </div>
-          <label>
-            Photo de profil ou logo (URL d'image, optionnel)
-            <input name="avatar" placeholder="https://..." />
-          </label>
-          <label>
-            Envoyer une photo de profil sur ImgBB
-            <input id="avatarUpload" type="file" accept="image/*" />
-          </label>
-          <p class="upload-status" id="avatarUploadStatus" aria-live="polite"></p>
-          <label>
-            Competences (separees par des virgules)
-            <input name="skills" placeholder="HTML, CSS, JavaScript" />
-          </label>
-          <div class="form-row">
-            <label>
-              GitHub
-              <input name="github" placeholder="https://github.com/..." />
+              Role / titre
+              <input name="role" required />
             </label>
             <label>
-              LinkedIn
-              <input name="linkedin" placeholder="https://linkedin.com/in/..." />
+              Phrase d'accroche
+              <textarea name="tagline" rows="3" required></textarea>
+            </label>
+            <label>
+              Bio
+              <textarea name="bio" rows="6" required></textarea>
+            </label>
+            <div class="form-row">
+              <label>
+                Ville / pays
+                <input name="location" />
+              </label>
+              <label>
+                Email
+                <input name="email" type="email" />
+              </label>
+            </div>
+            <label>
+              Photo de profil ou logo (URL d'image, optionnel)
+              <input name="avatar" placeholder="https://..." />
+            </label>
+            <label>
+              Envoyer une photo de profil sur ImgBB
+              <input id="avatarUpload" type="file" accept="image/*" />
+            </label>
+            <p class="upload-status" id="avatarUploadStatus" aria-live="polite"></p>
+            <label>
+              Competences (separees par des virgules)
+              <input name="skills" placeholder="HTML, CSS, JavaScript" />
             </label>
           </div>
-          <div class="form-row">
+
+          <div class="form-section">
+            <div class="form-section-heading">
+              <h3>Reseaux sociaux</h3>
+              <p>Liens visibles dans la section contact du site public.</p>
+            </div>
+            <div class="form-row">
+              <label>
+                GitHub
+                <input name="github" placeholder="https://github.com/..." />
+              </label>
+              <label>
+                LinkedIn
+                <input name="linkedin" placeholder="https://linkedin.com/in/..." />
+              </label>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-heading">
+              <h3>Contact</h3>
+              <p>Email, WhatsApp et message d'approche pour les visiteurs.</p>
+            </div>
+            <div class="form-row">
+              <label>
+                Numero WhatsApp
+                <input name="whatsappNumber" placeholder="Ex: 2250700000000" />
+              </label>
+              <label>
+                Message WhatsApp preregle
+                <input name="whatsappMessage" placeholder="Bonjour, je viens de visiter votre portfolio..." />
+              </label>
+            </div>
             <label>
-              Numero WhatsApp
-              <input name="whatsappNumber" placeholder="Ex: 2250700000000" />
-            </label>
-            <label>
-              Message WhatsApp preregle
-              <input name="whatsappMessage" placeholder="Bonjour, je viens de visiter votre portfolio..." />
+              Texte de contact
+              <textarea name="contactText" rows="3"></textarea>
             </label>
           </div>
-          <label>
-            Texte de contact
-            <textarea name="contactText" rows="3"></textarea>
-          </label>
           <button class="button primary" type="submit">Sauvegarder la presentation</button>
         </form>
 
