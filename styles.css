@@ -162,6 +162,69 @@ img {
   color: var(--text);
 }
 
+.admin-menu-button {
+  display: grid;
+  width: 2.15rem;
+  height: 2.15rem;
+  place-items: center;
+  gap: 0.2rem;
+  padding: 0.45rem;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface-soft);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.admin-menu-button span {
+  display: block;
+  width: 1rem;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.admin-menu-panel {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  left: 50%;
+  z-index: 30;
+  display: grid;
+  width: min(92vw, 360px);
+  gap: 0.35rem;
+  padding: 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: 1.15rem;
+  background: var(--header-bg);
+  box-shadow: var(--shadow);
+  transform: translateX(-50%);
+  backdrop-filter: blur(18px);
+  animation: adminMenuIn 0.18s ease both;
+}
+
+.admin-menu-panel button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 2.65rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid transparent;
+  border-radius: 0.82rem;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  text-align: left;
+}
+
+.admin-menu-panel button:hover,
+.admin-menu-panel button.active {
+  border-color: rgba(56, 189, 248, 0.35);
+  background: var(--surface-soft);
+  color: var(--text);
+}
+
 .admin-link {
   color: var(--brand) !important;
 }
@@ -943,6 +1006,15 @@ select:focus-visible {
   padding-bottom: 5rem;
 }
 
+.admin-workspace {
+  grid-template-columns: 1fr;
+  max-width: 880px;
+}
+
+.admin-workspace .side-panel {
+  width: 100%;
+}
+
 .login-screen {
   display: grid;
   min-height: 100vh;
@@ -982,6 +1054,22 @@ select:focus-visible {
   margin: 0;
   color: var(--danger);
   font-weight: 700;
+}
+
+.admin-toast {
+  position: fixed;
+  top: 4.25rem;
+  right: clamp(1rem, 3vw, 2rem);
+  z-index: 60;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(56, 189, 248, 0.42);
+  border-radius: 999px;
+  background: var(--header-bg);
+  color: var(--text);
+  font-weight: 900;
+  box-shadow: 0 18px 54px rgba(37, 99, 235, 0.24);
+  backdrop-filter: blur(16px);
+  animation: toastIn 0.28s ease both;
 }
 
 [hidden] {
@@ -1285,5 +1373,29 @@ select option {
 
   50% {
     box-shadow: 0 18px 64px rgba(56, 189, 248, 0.42);
+  }
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes adminMenuIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-8px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
   }
 }

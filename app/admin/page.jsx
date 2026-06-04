@@ -74,6 +74,9 @@ export default function AdminPage() {
   const [busy, setBusy] = useState(false);
   const [authStatus, setAuthStatus] = useState("");
   const [saveStatus, setSaveStatus] = useState("");
+  const [toastMessage, setToastMessage] = useState("");
+  const [activeAdminSection, setActiveAdminSection] = useState("profile");
+  const [adminMenuOpen, setAdminMenuOpen] = useState(false);
   const [avatarUploadStatus, setAvatarUploadStatus] = useState("");
   const [projectUploadStatus, setProjectUploadStatus] = useState("");
 
@@ -139,12 +142,20 @@ export default function AdminPage() {
       setContent(savedContent);
       setProfile(contentToProfile(savedContent));
       setSaveStatus(message);
+      showToast("Modifications enregistrées");
     } catch (error) {
       setSaveStatus("Sauvegarde Firebase impossible. Verifiez la connexion et les regles Firestore.");
       console.error(error);
     } finally {
       setBusy(false);
     }
+  }
+
+  function showToast(message) {
+    setToastMessage(message);
+    window.setTimeout(() => {
+      setToastMessage("");
+    }, 2800);
   }
 
   async function handleProfileSubmit(event) {
@@ -206,7 +217,12 @@ export default function AdminPage() {
       image: projectToEdit.image || ""
     });
     setProjectUploadStatus("");
-    document.getElementById("projectForm")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    openAdminSection("project");
+  }
+
+  function openAdminSection(section) {
+    setActiveAdminSection(section);
+    setAdminMenuOpen(false);
   }
 
   async function deleteProject(projectId) {
@@ -345,8 +361,25 @@ export default function AdminPage() {
 
   return (
     <div className="admin-body">
+      {toastMessage && (
+        <div className="admin-toast" role="status" aria-live="polite">
+          {toastMessage}
+        </div>
+      )}
+
       <header className="site-header admin-shell">
         <nav className="nav" aria-label="Navigation admin">
+          <button
+            className="admin-menu-button"
+            type="button"
+            onClick={() => setAdminMenuOpen((open) => !open)}
+            aria-expanded={adminMenuOpen}
+            aria-label="Ouvrir le menu admin"
+          >
+            <span />
+            <span />
+            <span />
+          </button>
           <a href="/">Voir le site</a>
           <ThemeToggle />
           <button className="link-button" type="button" onClick={resetAllContent} disabled={busy}>
@@ -356,9 +389,25 @@ export default function AdminPage() {
             Deconnexion
           </button>
         </nav>
+        {adminMenuOpen && (
+          <div className="admin-menu-panel" role="menu">
+            <button className={activeAdminSection === "profile" ? "active" : ""} type="button" onClick={() => openAdminSection("profile")} role="menuitem">
+              Presentation
+            </button>
+            <button className={activeAdminSection === "project" ? "active" : ""} type="button" onClick={() => openAdminSection("project")} role="menuitem">
+              Ajouter / modifier projet
+            </button>
+            <button className={activeAdminSection === "projects" ? "active" : ""} type="button" onClick={() => openAdminSection("projects")} role="menuitem">
+              Projets existants
+            </button>
+            <button className={activeAdminSection === "backup" ? "active" : ""} type="button" onClick={() => openAdminSection("backup")} role="menuitem">
+              Sauvegarde
+            </button>
+          </div>
+        )}
       </header>
 
-      <main className="admin-layout admin-shell">
+      <main className="admin-layout admin-workspace admin-shell">
         <section className="admin-panel">
           <div className="section-heading compact">
             <p className="eyebrow">Contenu public</p>
@@ -367,6 +416,7 @@ export default function AdminPage() {
             <p className="upload-status" aria-live="polite">{saveStatus}</p>
           </div>
 
+          {activeAdminSection === "profile" && (
           <form className="form-card" onSubmit={handleProfileSubmit}>
             <h2>Presentation</h2>
             <div className="form-section">
@@ -494,7 +544,9 @@ export default function AdminPage() {
               Sauvegarder la presentation
             </button>
           </form>
+          )}
 
+          {activeAdminSection === "project" && (
           <form className="form-card" id="projectForm" onSubmit={handleProjectSubmit}>
             <h2>{project.id ? "Modifier le projet" : "Ajouter un projet"}</h2>
             <label>
@@ -543,9 +595,11 @@ export default function AdminPage() {
               )}
             </div>
           </form>
+          )}
         </section>
 
-        <aside className="admin-panel side-panel">
+        {activeAdminSection === "projects" && (
+        <section className="admin-panel side-panel">
           <div className="form-card">
             <h2>Projets existants</h2>
             <div className="admin-projects">
@@ -566,6 +620,11 @@ export default function AdminPage() {
               ))}
             </div>
           </div>
+        </section>
+        )}
+
+        {activeAdminSection === "backup" && (
+        <section className="admin-panel side-panel">
           <div className="form-card">
             <h2>Sauvegarde</h2>
             <p className="muted">Utilisez l'export pour transferer le contenu ou garder une sauvegarde.</p>
@@ -580,7 +639,8 @@ export default function AdminPage() {
             </div>
             <textarea className="json-output" rows="8" readOnly value={JSON.stringify(content, null, 2)} />
           </div>
-        </aside>
+        </section>
+        )}
       </main>
     </div>
   );
