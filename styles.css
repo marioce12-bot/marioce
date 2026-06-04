@@ -103,8 +103,11 @@ img {
 }
 
 .site-header {
-  position: relative;
+  position: fixed;
   z-index: 10;
+  top: 0;
+  left: 0;
+  right: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -113,6 +116,11 @@ img {
   border-bottom: 1px solid var(--border);
   background: var(--header-bg);
   backdrop-filter: blur(18px);
+}
+
+.public-body main,
+.admin-body .admin-layout {
+  padding-top: 3.2rem;
 }
 
 .brand,
@@ -904,7 +912,7 @@ select:focus-visible {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(300px, 0.45fr);
   gap: 1rem;
-  padding: 2rem 0 5rem;
+  padding-bottom: 5rem;
 }
 
 .login-screen {
