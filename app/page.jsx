@@ -277,11 +277,6 @@ export default function HomePage() {
                   Voir mes projets
                 </a>
               )}
-              {content.email && (
-                <a className="button secondary" href={`mailto:${content.email}`}>
-                  Me contacter
-                </a>
-              )}
             </div>
           </div>
           {hasHeroCard && (
