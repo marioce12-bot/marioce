@@ -875,6 +875,34 @@ select:focus-visible {
   border-color: rgba(56, 189, 248, 0.78);
 }
 
+.back-to-top {
+  position: fixed;
+  right: clamp(1rem, 3vw, 2rem);
+  bottom: calc(clamp(1rem, 3vw, 2rem) + 4.45rem);
+  z-index: 20;
+  display: grid;
+  width: 2.85rem;
+  height: 2.85rem;
+  place-items: center;
+  border: 1px solid rgba(56, 189, 248, 0.42);
+  border-radius: 50%;
+  background: var(--header-bg);
+  color: var(--brand);
+  font: inherit;
+  font-size: 1.3rem;
+  font-weight: 900;
+  box-shadow: 0 18px 54px rgba(37, 99, 235, 0.2);
+  cursor: pointer;
+  backdrop-filter: blur(16px);
+  transition: transform 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.back-to-top:hover {
+  transform: translateY(-3px) scale(1.04);
+  border-color: rgba(56, 189, 248, 0.78);
+  color: var(--text);
+}
+
 .whatsapp-badge {
   display: grid;
   width: 2.85rem;

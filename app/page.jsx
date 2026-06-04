@@ -88,6 +88,7 @@ export default function HomePage() {
   const [animationsReady, setAnimationsReady] = useState(false);
   const [typedName, setTypedName] = useState("");
   const [typedTagline, setTypedTagline] = useState("");
+  const [showBackTop, setShowBackTop] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -121,8 +122,18 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
-    document.title = `${content.fullName} | Portfolio`;
+    document.title = content.fullName ? `${content.fullName} | Portfolio` : "Portfolio";
   }, [content.fullName]);
+
+  useEffect(() => {
+    function handleScroll() {
+      setShowBackTop(window.scrollY > 520);
+    }
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     if (loading) return;
@@ -211,6 +222,11 @@ export default function HomePage() {
     .map(([key, label, url]) => [key, label, normalizeUrl(url)])
     .filter(([, , url]) => Boolean(url));
   const presentationVideo = videoEmbedUrl(content.presentationVideo);
+  const hasHeroCard = Boolean(content.avatar || content.fullName || content.location || content.projects.length || content.skills.length);
+  const contactLinksCount = Number(Boolean(content.email)) + socialLinks.length;
+  const hasAbout = Boolean(content.bio || content.skills.length > 0);
+  const hasProjects = content.projects.length > 0;
+  const hasContact = Boolean(content.contactText || contactLinksCount > 0);
 
   return (
     <div className={`public-body ${loading ? "is-loading" : ""} ${animationsReady ? "animations-ready" : ""}`}>
@@ -232,9 +248,9 @@ export default function HomePage() {
 
       <header className="site-header">
         <nav className="nav" aria-label="Navigation principale">
-          <a href="#about">Moi</a>
-          <a href="#projects">Projets</a>
-          <a href="#contact">Contact</a>
+          {hasAbout && <a href="#about">Moi</a>}
+          {hasProjects && <a href="#projects">Projets</a>}
+          {hasContact && <a href="#contact">Contact</a>}
           <ThemeToggle />
         </nav>
       </header>
@@ -242,64 +258,82 @@ export default function HomePage() {
       <main>
         <section className="hero reveal-on-scroll" id="hero">
           <div className="hero-copy reveal-on-scroll">
-            <p className="eyebrow">{content.role}</p>
-            <h1 className="typewriter-text">
-              {typedName || content.fullName}
-              <span className="typing-caret" aria-hidden="true" />
-            </h1>
-            <p className="lead typewriter-lead">
-              <LinkifiedText text={typedTagline || content.tagline} />
-              <span className="typing-caret small" aria-hidden="true" />
-            </p>
+            {content.role && <p className="eyebrow">{content.role}</p>}
+            {content.fullName && (
+              <h1 className="typewriter-text">
+                {typedName || content.fullName}
+                <span className="typing-caret" aria-hidden="true" />
+              </h1>
+            )}
+            {content.tagline && (
+              <p className="lead typewriter-lead">
+                <LinkifiedText text={typedTagline || content.tagline} />
+                <span className="typing-caret small" aria-hidden="true" />
+              </p>
+            )}
             <div className="hero-actions">
-              <a className="button primary" href="#projects">
-                Voir mes projets
-              </a>
-              <a className="button secondary" href={`mailto:${content.email}`}>
-                Me contacter
-              </a>
+              {hasProjects && (
+                <a className="button primary" href="#projects">
+                  Voir mes projets
+                </a>
+              )}
+              {content.email && (
+                <a className="button secondary" href={`mailto:${content.email}`}>
+                  Me contacter
+                </a>
+              )}
             </div>
           </div>
-          <aside className="hero-card reveal-on-scroll" aria-label="Resume rapide">
-            <div
-              className={`profile-photo ${content.avatar ? "has-image" : ""}`}
-              style={content.avatar ? { backgroundImage: `url("${content.avatar}")` } : undefined}
-            >
-              {initials(content.fullName)}
-            </div>
-            <p>{content.location}</p>
-            <div className="stats">
-              <span>
-                <strong>{content.projects.length}</strong> projets
-              </span>
-              <span>
-                <strong>{content.skills.length}</strong> competences
-              </span>
-            </div>
-          </aside>
+          {hasHeroCard && (
+            <aside className="hero-card reveal-on-scroll" aria-label="Resume rapide">
+              {(content.avatar || content.fullName) && (
+                <div
+                  className={`profile-photo ${content.avatar ? "has-image" : ""}`}
+                  style={content.avatar ? { backgroundImage: `url("${content.avatar}")` } : undefined}
+                >
+                  {initials(content.fullName)}
+                </div>
+              )}
+              {content.location && <p>{content.location}</p>}
+              <div className="stats">
+                <span>
+                  <strong>{content.projects.length}</strong> projets
+                </span>
+                <span>
+                  <strong>{content.skills.length}</strong> competences
+                </span>
+              </div>
+            </aside>
+          )}
         </section>
 
-        <section className="section reveal-on-scroll" id="about">
-          <div className="section-heading">
-            <p className="eyebrow">Presentation</p>
-            <h2>Qui je suis</h2>
-          </div>
-          <div className="about-grid">
-            <p className="about-text reveal-on-scroll">
-              <LinkifiedText text={content.bio} />
-            </p>
-            <div className="skills-card reveal-on-scroll">
-              <h3>Competences</h3>
-              <div className="chips">
-                {content.skills.map((skill) => (
-                  <span className="chip" key={skill}>
-                    {skill}
-                  </span>
-                ))}
-              </div>
+        {hasAbout && (
+          <section className="section reveal-on-scroll" id="about">
+            <div className="section-heading">
+              <p className="eyebrow">Presentation</p>
+              <h2>Qui je suis</h2>
             </div>
-          </div>
-        </section>
+            <div className="about-grid">
+              {content.bio && (
+                <p className="about-text reveal-on-scroll">
+                  <LinkifiedText text={content.bio} />
+                </p>
+              )}
+              {content.skills.length > 0 && (
+                <div className="skills-card reveal-on-scroll">
+                  <h3>Competences</h3>
+                  <div className="chips">
+                    {content.skills.map((skill) => (
+                      <span className="chip" key={skill}>
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
 
         {presentationVideo && (
           <section className="section video-section reveal-on-scroll" id="presentation-video">
@@ -322,70 +356,86 @@ export default function HomePage() {
           </section>
         )}
 
-        <section className="section projects-section reveal-on-scroll" id="projects">
-          <div className="section-heading">
-            <p className="eyebrow">Travaux</p>
-            <h2>Sites et projets</h2>
-          </div>
-          <div className="projects-grid">
-            {content.projects.map((project) => {
-              const tech = Array.isArray(project.tech) ? project.tech.join(" / ") : project.tech || "";
-              const projectUrl = normalizeUrl(project.url);
-              return (
-                <article className="project-card reveal-on-scroll" key={project.id}>
-                  <div
-                    className={`project-media ${project.image ? "has-image" : ""}`}
-                    style={project.image ? { backgroundImage: `url('${project.image}')` } : undefined}
-                  >
-                    {initials(project.title)}
-                  </div>
-                  <div className="project-content">
-                    <div className="project-meta">
-                      <span className={`status-badge ${statusClass(project.status)}`}>{project.status || "Projet"}</span>
-                      <span className="project-tech">{tech}</span>
+        {hasProjects && (
+          <section className="section projects-section reveal-on-scroll" id="projects">
+            <div className="section-heading">
+              <p className="eyebrow">Travaux</p>
+              <h2>Sites et projets</h2>
+            </div>
+            <div className="projects-grid">
+              {content.projects.map((project) => {
+                const tech = Array.isArray(project.tech) ? project.tech.join(" / ") : project.tech || "";
+                const projectUrl = normalizeUrl(project.url);
+                return (
+                  <article className="project-card reveal-on-scroll" key={project.id}>
+                    <div
+                      className={`project-media ${project.image ? "has-image" : ""}`}
+                      style={project.image ? { backgroundImage: `url('${project.image}')` } : undefined}
+                    >
+                      {initials(project.title)}
                     </div>
-                    <h3>{project.title}</h3>
-                    <p>
-                      <LinkifiedText text={project.description} />
-                    </p>
-                    {projectUrl && (
-                      <a className="project-link button secondary" href={projectUrl} target="_blank" rel="noreferrer">
-                        Visiter
-                      </a>
-                    )}
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-        </section>
+                    <div className="project-content">
+                      <div className="project-meta">
+                        <span className={`status-badge ${statusClass(project.status)}`}>{project.status || "Projet"}</span>
+                        {tech && <span className="project-tech">{tech}</span>}
+                      </div>
+                      <h3>{project.title}</h3>
+                      {project.description && (
+                        <p>
+                          <LinkifiedText text={project.description} />
+                        </p>
+                      )}
+                      {projectUrl && (
+                        <a className="project-link button secondary" href={projectUrl} target="_blank" rel="noreferrer">
+                          Visiter
+                        </a>
+                      )}
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </section>
+        )}
 
-        <section className="section contact-section reveal-on-scroll" id="contact">
-          <div>
-            <p className="eyebrow">Contact</p>
-            <h2>Discutons de votre prochain projet</h2>
-            <p>
-              <LinkifiedText text={content.contactText} />
-            </p>
-          </div>
-          <div className="contact-card">
-            <a href={`mailto:${content.email}`}>{content.email}</a>
-            {socialLinks.length > 0 && (
-              <div className="social-icons" aria-label="Liens sociaux">
-                {socialLinks.map(([key, label, url]) => (
-                  <a className={`social-icon ${key}`} href={url} target="_blank" rel="noreferrer" aria-label={label} title={label} key={key}>
-                    <SocialIcon name={key} />
-                  </a>
-                ))}
-              </div>
-            )}
-          </div>
-        </section>
+        {hasContact && (
+          <section className="section contact-section reveal-on-scroll" id="contact">
+            <div>
+              <p className="eyebrow">Contact</p>
+              <h2>Discutons de votre prochain projet</h2>
+              {content.contactText && (
+                <p>
+                  <LinkifiedText text={content.contactText} />
+                </p>
+              )}
+            </div>
+            <div className="contact-card">
+              {content.email && <a href={`mailto:${content.email}`}>{content.email}</a>}
+              {socialLinks.length > 0 && (
+                <div className="social-icons" aria-label="Liens sociaux">
+                  {socialLinks.map(([key, label, url]) => (
+                    <a className={`social-icon ${key}`} href={url} target="_blank" rel="noreferrer" aria-label={label} title={label} key={key}>
+                      <SocialIcon name={key} />
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+          </section>
+        )}
       </main>
 
-      <footer className="footer">
-        <span>{content.fullName}</span>
-      </footer>
+      {content.fullName && (
+        <footer className="footer">
+          <span>{content.fullName}</span>
+        </footer>
+      )}
+
+      {showBackTop && (
+        <button className="back-to-top" type="button" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} aria-label="Retour en haut">
+          ↑
+        </button>
+      )}
 
       {whatsappHref && (
         <a className="whatsapp-float" href={whatsappHref} target="_blank" rel="noreferrer" aria-label="Contacter sur WhatsApp">
