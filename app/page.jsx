@@ -11,6 +11,35 @@ function wait(duration) {
   return new Promise((resolve) => window.setTimeout(resolve, duration));
 }
 
+function videoEmbedUrl(url) {
+  const value = normalizeUrl(url);
+  if (!value) return "";
+
+  try {
+    const parsed = new URL(value);
+    if (parsed.hostname.includes("youtube.com")) {
+      const id = parsed.searchParams.get("v");
+      return id ? `https://www.youtube.com/embed/${id}` : value;
+    }
+    if (parsed.hostname.includes("youtu.be")) {
+      const id = parsed.pathname.replace("/", "");
+      return id ? `https://www.youtube.com/embed/${id}` : value;
+    }
+    if (parsed.hostname.includes("vimeo.com")) {
+      const id = parsed.pathname.split("/").filter(Boolean)[0];
+      return id ? `https://player.vimeo.com/video/${id}` : value;
+    }
+  } catch (error) {
+    return value;
+  }
+
+  return value;
+}
+
+function isDirectVideo(url) {
+  return /\.(mp4|webm|ogg)(\?.*)?$/i.test(url || "");
+}
+
 function WhatsAppIcon() {
   return (
     <svg viewBox="0 0 24 24" role="img" focusable="false" aria-hidden="true">
@@ -57,6 +86,8 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [introDone, setIntroDone] = useState(false);
   const [animationsReady, setAnimationsReady] = useState(false);
+  const [typedName, setTypedName] = useState("");
+  const [typedTagline, setTypedTagline] = useState("");
 
   useEffect(() => {
     let active = true;
@@ -92,6 +123,43 @@ export default function HomePage() {
   useEffect(() => {
     document.title = `${content.fullName} | Portfolio`;
   }, [content.fullName]);
+
+  useEffect(() => {
+    if (loading) return;
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) {
+      setTypedName(content.fullName);
+      setTypedTagline(content.tagline);
+      return;
+    }
+
+    let nameIndex = 0;
+    let taglineIndex = 0;
+    let taglineTimer;
+
+    setTypedName("");
+    setTypedTagline("");
+
+    const nameTimer = window.setInterval(() => {
+      nameIndex += 1;
+      setTypedName(content.fullName.slice(0, nameIndex));
+
+      if (nameIndex >= content.fullName.length) {
+        window.clearInterval(nameTimer);
+        taglineTimer = window.setInterval(() => {
+          taglineIndex += 1;
+          setTypedTagline(content.tagline.slice(0, taglineIndex));
+          if (taglineIndex >= content.tagline.length) window.clearInterval(taglineTimer);
+        }, 22);
+      }
+    }, 55);
+
+    return () => {
+      window.clearInterval(nameTimer);
+      if (taglineTimer) window.clearInterval(taglineTimer);
+    };
+  }, [content.fullName, content.tagline, loading]);
 
   useEffect(() => {
     if (!animationsReady) return;
@@ -142,11 +210,20 @@ export default function HomePage() {
   ]
     .map(([key, label, url]) => [key, label, normalizeUrl(url)])
     .filter(([, , url]) => Boolean(url));
+  const presentationVideo = videoEmbedUrl(content.presentationVideo);
 
   return (
     <div className={`public-body ${loading ? "is-loading" : ""} ${animationsReady ? "animations-ready" : ""}`}>
       {!introDone && (
         <div className={`world-intro ${loading ? "" : "is-ending"}`} id="worldIntro" aria-hidden="true">
+          <div className="dev-pattern">
+            <span>{"<code />"}</span>
+            <span>{"const site = portfolio"}</span>
+            <span>{"{ UI: 'clean' }"}</span>
+            <span>{"npm run build"}</span>
+            <span>{"function create()"}</span>
+            <span>{"deploy(main)"}</span>
+          </div>
           <div className="world-tunnel" />
           <div className="world-core">Portfolio</div>
           <p>Entree dans mon univers digital</p>
@@ -154,10 +231,6 @@ export default function HomePage() {
       )}
 
       <header className="site-header">
-        <a className="brand" href="#hero" aria-label="Retour a l'accueil">
-          <span className="brand-mark">P</span>
-          <span>{content.fullName}</span>
-        </a>
         <nav className="nav" aria-label="Navigation principale">
           <a href="#about">Moi</a>
           <a href="#projects">Projets</a>
@@ -170,9 +243,13 @@ export default function HomePage() {
         <section className="hero reveal-on-scroll" id="hero">
           <div className="hero-copy reveal-on-scroll">
             <p className="eyebrow">{content.role}</p>
-            <h1>{content.fullName}</h1>
-            <p className="lead">
-              <LinkifiedText text={content.tagline} />
+            <h1 className="typewriter-text">
+              {typedName || content.fullName}
+              <span className="typing-caret" aria-hidden="true" />
+            </h1>
+            <p className="lead typewriter-lead">
+              <LinkifiedText text={typedTagline || content.tagline} />
+              <span className="typing-caret small" aria-hidden="true" />
             </p>
             <div className="hero-actions">
               <a className="button primary" href="#projects">
@@ -223,6 +300,27 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        {presentationVideo && (
+          <section className="section video-section reveal-on-scroll" id="presentation-video">
+            <div className="section-heading">
+              <p className="eyebrow">Video</p>
+              <h2>Ma presentation</h2>
+            </div>
+            <div className="video-card">
+              {isDirectVideo(presentationVideo) ? (
+                <video src={presentationVideo} controls playsInline preload="metadata" />
+              ) : (
+                <iframe
+                  src={presentationVideo}
+                  title="Video de presentation"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+              )}
+            </div>
+          </section>
+        )}
 
         <section className="section projects-section reveal-on-scroll" id="projects">
           <div className="section-heading">

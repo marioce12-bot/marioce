@@ -45,6 +45,7 @@ function contentToProfile(content) {
     role: content.role || "",
     tagline: content.tagline || "",
     bio: content.bio || "",
+    presentationVideo: content.presentationVideo || "",
     location: content.location || "",
     email: content.email || "",
     avatar: content.avatar || "",
@@ -154,6 +155,7 @@ export default function AdminPage() {
       role: profile.role,
       tagline: profile.tagline,
       bio: profile.bio,
+      presentationVideo: profile.presentationVideo,
       location: profile.location,
       email: profile.email,
       avatar: profile.avatar,
@@ -344,10 +346,6 @@ export default function AdminPage() {
   return (
     <div className="admin-body">
       <header className="site-header admin-shell">
-        <a className="brand" href="/">
-          <span className="brand-mark">P</span>
-          <span>Administration</span>
-        </a>
         <nav className="nav" aria-label="Navigation admin">
           <a href="/">Voir le site</a>
           <ThemeToggle />
@@ -391,6 +389,14 @@ export default function AdminPage() {
               <label>
                 Bio
                 <textarea value={profile.bio} rows="6" required onChange={(event) => setProfile({ ...profile, bio: event.target.value })} />
+              </label>
+              <label>
+                Video de presentation (YouTube, Vimeo ou lien direct MP4/WebM)
+                <input
+                  value={profile.presentationVideo}
+                  placeholder="https://youtube.com/watch?v=..."
+                  onChange={(event) => setProfile({ ...profile, presentationVideo: event.target.value })}
+                />
               </label>
               <div className="form-row">
                 <label>
