@@ -93,6 +93,37 @@ export default function HomePage() {
     document.title = `${content.fullName} | Portfolio`;
   }, [content.fullName]);
 
+  useEffect(() => {
+    if (!animationsReady) return;
+
+    const elements = document.querySelectorAll(".reveal-on-scroll");
+    if (!elements.length) return;
+
+    if (!("IntersectionObserver" in window)) {
+      elements.forEach((element) => element.classList.add("is-visible"));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.16, rootMargin: "0px 0px -6% 0px" }
+    );
+
+    elements.forEach((element, index) => {
+      element.classList.remove("is-visible");
+      element.style.setProperty("--reveal-delay", `${Math.min(index * 45, 360)}ms`);
+      observer.observe(element);
+    });
+
+    return () => observer.disconnect();
+  }, [animationsReady, content.projects.length]);
+
   const whatsappNumber = String(content.whatsappNumber || "").replace(/\D/g, "");
   const whatsappHref = whatsappNumber
     ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
@@ -136,8 +167,8 @@ export default function HomePage() {
       </header>
 
       <main>
-        <section className="hero reveal-on-scroll is-visible" id="hero">
-          <div className="hero-copy reveal-on-scroll is-visible">
+        <section className="hero reveal-on-scroll" id="hero">
+          <div className="hero-copy reveal-on-scroll">
             <p className="eyebrow">{content.role}</p>
             <h1>{content.fullName}</h1>
             <p className="lead">
@@ -152,7 +183,7 @@ export default function HomePage() {
               </a>
             </div>
           </div>
-          <aside className="hero-card reveal-on-scroll is-visible" aria-label="Resume rapide">
+          <aside className="hero-card reveal-on-scroll" aria-label="Resume rapide">
             <div
               className={`profile-photo ${content.avatar ? "has-image" : ""}`}
               style={content.avatar ? { backgroundImage: `url("${content.avatar}")` } : undefined}
@@ -171,16 +202,16 @@ export default function HomePage() {
           </aside>
         </section>
 
-        <section className="section reveal-on-scroll is-visible" id="about">
+        <section className="section reveal-on-scroll" id="about">
           <div className="section-heading">
             <p className="eyebrow">Presentation</p>
             <h2>Qui je suis</h2>
           </div>
           <div className="about-grid">
-            <p className="about-text reveal-on-scroll is-visible">
+            <p className="about-text reveal-on-scroll">
               <LinkifiedText text={content.bio} />
             </p>
-            <div className="skills-card reveal-on-scroll is-visible">
+            <div className="skills-card reveal-on-scroll">
               <h3>Competences</h3>
               <div className="chips">
                 {content.skills.map((skill) => (
@@ -193,7 +224,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="section projects-section reveal-on-scroll is-visible" id="projects">
+        <section className="section projects-section reveal-on-scroll" id="projects">
           <div className="section-heading">
             <p className="eyebrow">Travaux</p>
             <h2>Sites et projets</h2>
@@ -203,7 +234,7 @@ export default function HomePage() {
               const tech = Array.isArray(project.tech) ? project.tech.join(" / ") : project.tech || "";
               const projectUrl = normalizeUrl(project.url);
               return (
-                <article className="project-card reveal-on-scroll is-visible" key={project.id}>
+                <article className="project-card reveal-on-scroll" key={project.id}>
                   <div
                     className={`project-media ${project.image ? "has-image" : ""}`}
                     style={project.image ? { backgroundImage: `url('${project.image}')` } : undefined}
@@ -231,7 +262,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="section contact-section reveal-on-scroll is-visible" id="contact">
+        <section className="section contact-section reveal-on-scroll" id="contact">
           <div>
             <p className="eyebrow">Contact</p>
             <h2>Discutons de votre prochain projet</h2>
