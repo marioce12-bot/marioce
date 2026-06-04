@@ -59,6 +59,7 @@ function contentToProfile(content) {
     tiktok: content.tiktok || "",
     youtube: content.youtube || "",
     website: content.website || "",
+    clarivAfrica: content.clarivAfrica || "",
     whatsappNumber: content.whatsappNumber || "",
     whatsappMessage: content.whatsappMessage || "",
     contactText: content.contactText || ""
@@ -179,6 +180,7 @@ export default function AdminPage() {
       tiktok: profile.tiktok,
       youtube: profile.youtube,
       website: profile.website,
+      clarivAfrica: profile.clarivAfrica,
       whatsappNumber: profile.whatsappNumber,
       whatsappMessage: profile.whatsappMessage,
       contactText: profile.contactText,
@@ -521,6 +523,14 @@ export default function AdminPage() {
                   <input value={profile.website} placeholder="https://..." onChange={(event) => setProfile({ ...profile, website: event.target.value })} />
                 </label>
               </div>
+              <label>
+                Clariv Africa
+                <input
+                  value={profile.clarivAfrica}
+                  placeholder="https://www.clariv-africa.com/..."
+                  onChange={(event) => setProfile({ ...profile, clarivAfrica: event.target.value })}
+                />
+              </label>
             </div>
 
             <div className="form-section">

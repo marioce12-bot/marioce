@@ -49,6 +49,10 @@ function WhatsAppIcon() {
 }
 
 function SocialIcon({ name }) {
+  if (name === "clarivAfrica") {
+    return <img src="https://www.clariv-africa.com/icon-192.png" alt="" loading="lazy" />;
+  }
+
   const icons = {
     github: (
       <path d="M12 .7a11.3 11.3 0 0 0-3.57 22c.57.1.78-.25.78-.55v-2.14c-3.18.7-3.85-1.35-3.85-1.35-.52-1.33-1.27-1.68-1.27-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.75 1.18 1.75 1.18 1.02 1.75 2.68 1.25 3.33.96.1-.74.4-1.25.73-1.54-2.54-.29-5.21-1.27-5.21-5.64 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.46.11-3.03 0 0 .96-.31 3.13 1.17a10.8 10.8 0 0 1 5.7 0c2.17-1.48 3.13-1.17 3.13-1.17.62 1.57.23 2.74.11 3.03.73.8 1.18 1.82 1.18 3.07 0 4.38-2.67 5.35-5.22 5.63.41.36.78 1.06.78 2.13v3.15c0 .3.21.66.79.55A11.3 11.3 0 0 0 12 .7Z" />
@@ -217,7 +221,8 @@ export default function HomePage() {
     ["x", "X", content.x],
     ["tiktok", "TikTok", content.tiktok],
     ["youtube", "YouTube", content.youtube],
-    ["website", "Site web", content.website]
+    ["website", "Site web", content.website],
+    ["clarivAfrica", "Clariv Africa", content.clarivAfrica]
   ]
     .map(([key, label, url]) => [key, label, normalizeUrl(url)])
     .filter(([, , url]) => Boolean(url));

@@ -907,6 +907,11 @@ select:focus-visible {
   border-color: rgba(37, 99, 235, 0.55);
 }
 
+.social-icon.clarivAfrica {
+  background: #0f172a;
+  border-color: rgba(16, 185, 129, 0.55);
+}
+
 .social-icon:hover {
   transform: translateY(-3px) scale(1.04);
   filter: brightness(1.08) saturate(1.05);
@@ -916,6 +921,13 @@ select:focus-visible {
   width: 1.25rem;
   height: 1.25rem;
   fill: currentColor;
+}
+
+.social-icon img {
+  width: 1.85rem;
+  height: 1.85rem;
+  border-radius: 0.55rem;
+  object-fit: cover;
 }
 
 .footer {
