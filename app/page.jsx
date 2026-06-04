@@ -50,7 +50,7 @@ function WhatsAppIcon() {
 
 function SocialIcon({ name }) {
   if (name === "clarivAfrica") {
-    return <img src="https://www.clariv-africa.com/icon-192.png" alt="" loading="lazy" />;
+    return <img src="https://clariv-africa.com/clariv-social-icon.svg" alt="Clariv" width="44" height="44" loading="lazy" />;
   }
 
   const icons = {
@@ -222,7 +222,7 @@ export default function HomePage() {
     ["tiktok", "TikTok", content.tiktok],
     ["youtube", "YouTube", content.youtube],
     ["website", "Site web", content.website],
-    ["clarivAfrica", "Clariv Africa", content.clarivAfrica]
+    ["clarivAfrica", "Clariv", content.clarivAfrica]
   ]
     .map(([key, label, url]) => [key, label, normalizeUrl(url)])
     .filter(([, , url]) => Boolean(url));
