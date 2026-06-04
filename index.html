@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Portfolio | Accueil</title>
+    <meta
+      name="description"
+      content="Portfolio personnel: presentation, competences, projets et liens de contact."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="public-body">
+    <div class="world-intro" id="worldIntro" aria-hidden="true">
+      <div class="world-tunnel"></div>
+      <div class="world-core">Portfolio</div>
+      <p>Entree dans mon univers digital</p>
+    </div>
+
+    <header class="site-header">
+      <a class="brand" href="#hero" aria-label="Retour a l'accueil">
+        <span class="brand-mark">P</span>
+        <span id="brandName">Portfolio</span>
+      </a>
+      <nav class="nav" aria-label="Navigation principale">
+        <a href="#about">Moi</a>
+        <a href="#projects">Projets</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero reveal-on-scroll" id="hero">
+        <div class="hero-copy reveal-on-scroll">
+          <p class="eyebrow" id="role">Developpeur Web</p>
+          <h1 id="fullName">Votre Nom</h1>
+          <p class="lead" id="tagline">
+            Je cree des sites web modernes, rapides et utiles pour transformer des idees en experiences digitales.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#projects">Voir mes projets</a>
+            <a class="button secondary" id="emailLink" href="mailto:contact@example.com">Me contacter</a>
+          </div>
+        </div>
+        <aside class="hero-card reveal-on-scroll" aria-label="Resume rapide">
+          <div class="profile-photo" id="profilePhoto">VN</div>
+          <p id="location">Base a votre ville</p>
+          <div class="stats">
+            <span><strong id="projectCount">0</strong> projets</span>
+            <span><strong id="skillCount">0</strong> competences</span>
+          </div>
+        </aside>
+      </section>
+
+      <section class="section reveal-on-scroll" id="about">
+        <div class="section-heading">
+          <p class="eyebrow">Presentation</p>
+          <h2>Qui je suis</h2>
+        </div>
+        <div class="about-grid">
+          <p class="about-text reveal-on-scroll" id="bio">
+            Remplacez ce texte depuis la page admin par une presentation claire: votre parcours, vos specialites,
+            votre maniere de travailler et ce que vous cherchez actuellement.
+          </p>
+          <div class="skills-card reveal-on-scroll">
+            <h3>Competences</h3>
+            <div class="chips" id="skills"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section projects-section reveal-on-scroll" id="projects">
+        <div class="section-heading">
+          <p class="eyebrow">Travaux</p>
+          <h2>Sites et projets</h2>
+        </div>
+        <div class="projects-grid" id="projectsGrid"></div>
+      </section>
+
+      <section class="section contact-section reveal-on-scroll" id="contact">
+        <div>
+          <p class="eyebrow">Contact</p>
+          <h2>Discutons de votre prochain projet</h2>
+          <p id="contactText">
+            Disponible pour des missions web, collaborations ou opportunites professionnelles.
+          </p>
+        </div>
+        <div class="contact-card">
+          <a id="contactEmail" href="mailto:contact@example.com">contact@example.com</a>
+          <a id="githubLink" href="#" target="_blank" rel="noreferrer">GitHub</a>
+          <a id="linkedinLink" href="#" target="_blank" rel="noreferrer">LinkedIn</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span id="footerName">Portfolio</span>
+      <span>Mis a jour depuis la page admin.</span>
+    </footer>
+
+    <a class="whatsapp-float" id="whatsappFloat" href="#" target="_blank" rel="noreferrer" hidden>
+      <span class="whatsapp-badge">WA</span>
+      <span>
+        <strong>WhatsApp</strong>
+        <small>Message rapide</small>
+      </span>
+    </a>
+
+    <script type="module" src="public.js"></script>
+  </body>
+</html>
