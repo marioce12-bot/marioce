@@ -6,7 +6,10 @@ const syne = Syne({ subsets: ["latin"], variable: "--font-syne", display: "swap"
 
 export const metadata = {
   title: "Portfolio",
-  description: "Portfolio personnel: presentation, competences, projets et liens de contact."
+  description: "Portfolio personnel: presentation, competences, projets et liens de contact.",
+  verification: {
+    google: "rXjZlosAG9-mqXyzW7ABdTlXHa6UiWrVDgoYNoAgFA4"
+  }
 };
 
 export const viewport = {
