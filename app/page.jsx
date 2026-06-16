@@ -5,12 +5,6 @@ import ThemeToggle from "../components/ThemeToggle";
 import { defaults, loadPortfolio } from "../lib/storage";
 import { initials, LinkifiedText, normalizeUrl, statusClass } from "../lib/text";
 
-const minimumIntroTime = 2200;
-
-function wait(duration) {
-  return new Promise((resolve) => window.setTimeout(resolve, duration));
-}
-
 function videoEmbedUrl(url) {
   const value = normalizeUrl(url);
   if (!value) return "";
@@ -87,41 +81,27 @@ function SocialIcon({ name }) {
 
 export default function HomePage() {
   const [content, setContent] = useState(defaults);
-  const [loading, setLoading] = useState(true);
-  const [introDone, setIntroDone] = useState(false);
-  const [animationsReady, setAnimationsReady] = useState(false);
   const [typedName, setTypedName] = useState("");
   const [typedTagline, setTypedTagline] = useState("");
   const [showBackTop, setShowBackTop] = useState(false);
+  const animationsReady = true;
 
   useEffect(() => {
     let active = true;
 
     async function initPage() {
       try {
-        const [loadedContent] = await Promise.all([loadPortfolio(), wait(minimumIntroTime)]);
+        const loadedContent = await loadPortfolio();
         if (active) setContent(loadedContent);
       } catch (error) {
         console.warn("Impossible de charger le contenu Firebase", error);
       }
-
-      if (!active) return;
-      setLoading(false);
-      window.setTimeout(() => {
-        if (!active) return;
-        setIntroDone(true);
-        setAnimationsReady(true);
-      }, 700);
     }
 
     initPage();
-    const fallback = window.setTimeout(() => {
-      if (active) setLoading(false);
-    }, 7000);
 
     return () => {
       active = false;
-      window.clearTimeout(fallback);
     };
   }, []);
 
@@ -140,8 +120,6 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
-    if (loading) return;
-
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduceMotion) {
       setTypedName(content.fullName);
@@ -174,7 +152,7 @@ export default function HomePage() {
       window.clearInterval(nameTimer);
       if (taglineTimer) window.clearInterval(taglineTimer);
     };
-  }, [content.fullName, content.tagline, loading]);
+  }, [content.fullName, content.tagline]);
 
   useEffect(() => {
     if (!animationsReady) return;
@@ -205,7 +183,7 @@ export default function HomePage() {
     });
 
     return () => observer.disconnect();
-  }, [animationsReady, content.projects.length]);
+  }, [animationsReady, content]);
 
   const whatsappNumber = String(content.whatsappNumber || "").replace(/\D/g, "");
   const whatsappHref = whatsappNumber
@@ -235,23 +213,7 @@ export default function HomePage() {
   const sortedProjects = [...content.projects].sort((first, second) => Number(Boolean(second.pinned)) - Number(Boolean(first.pinned)));
 
   return (
-    <div className={`public-body ${loading ? "is-loading" : ""} ${animationsReady ? "animations-ready" : ""}`}>
-      {!introDone && (
-        <div className={`world-intro ${loading ? "" : "is-ending"}`} id="worldIntro" aria-hidden="true">
-          <div className="dev-pattern">
-            <span>{"<code />"}</span>
-            <span>{"const site = portfolio"}</span>
-            <span>{"{ UI: 'clean' }"}</span>
-            <span>{"npm run build"}</span>
-            <span>{"function create()"}</span>
-            <span>{"deploy(main)"}</span>
-          </div>
-          <div className="world-tunnel" />
-          <div className="world-core">Portfolio</div>
-          <p>Entree dans mon univers digital</p>
-        </div>
-      )}
-
+    <div className={`public-body ${animationsReady ? "animations-ready" : ""}`}>
       <header className="site-header">
         <nav className="nav" aria-label="Navigation principale">
           {hasAbout && <a href="#about">Moi</a>}
